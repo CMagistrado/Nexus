@@ -1,5 +1,5 @@
 
 # My git aliases
 alias ga="git add"
-alias gc="git commit -M"
+alias gc="git commit -m"
 alias push="git push origin master"
