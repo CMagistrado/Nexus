@@ -1,0 +1,215 @@
+#!/bin/bash
+#
+# Program: fedora-installation
+# Author: Chris Magistrado
+# Description: This program should make our adminstrative job easier, by allowing admins to run this script upon first installation. It entirely configures Fedora 24.
+
+getPublicIP() 
+{
+	echo "What is the public IP?"
+	read public_ip
+	echo "What interface is this on? ie. enp1s0f0, enp1s0f1:"
+	read pub_int
+	echo ""
+	echo "Your Public IP: $public_ip"
+	echo "The interface is: $pub_int"
+	echo "Is this correct? (y/n)"
+	read public_answer
+	
+	if [ "$public_answer" = "n" ]; then
+		echo ""
+		getPublicIP
+	fi
+}
+
+getPrivateIP()
+{
+        echo "What is the private IP?"
+        read private_ip
+	echo "What interface is this on? ie. enp1s0f0, enp1s0f1:"
+	read pri_int
+	echo ""
+        echo "Your Private IP: $private_ip"
+	echo "The interface is: $pri_int"
+        echo "Is this correct? (y/n)"
+        read private_answer
+
+        if [ "$private_answer" = "n" ]; then
+                getPrivateIP
+        fi
+}
+
+getHost()
+{
+	echo "What's the hostname?"
+	read hostname
+        echo "You enetered: $hostname"
+        echo "Is this correct? (y/n)"
+        read hostname_answer
+
+        if [ "$hostname_answer" = "n" ]; then
+                echo ""
+                getHost
+        fi
+	
+}
+
+getDNS()
+{
+	echo "The current DNS Servers are: 143.215.130.231 and 143.215.130.231."
+	echo "Is this still current? (y/n)"
+	read dns_answer
+
+	if [ "$dns_answer" = "y" ]; then
+		dns_server_1=143.215.130.231
+		dns_server_2=143.215.130.232
+
+	elif [ "$dns_answer" = "n" ]; then
+		echo "Enter DNS address:"
+		read dns_server_1
+		echo "You entered: $dns_server_1."
+		echo "Is this correct?"
+		read dns1_answer
+
+		if [ "$dns1_answer" = "n"]; then
+			getDNS
+		fi
+		
+		echo "Are there more DNS Servers? (y/n)"
+		read more_servers
+
+		if [ "$more_servers" = "y" ]; then
+			echo "Enter DNS address #2:"
+			read dns_server_2
+        	        echo "You entered: $dns_server_1 and $dns_server_2"
+	                echo "Is this correct?"
+                	read dns2_answer
+
+			if [ "$dns2_answer" = "n"]; then
+				getDNS
+			fi
+		fi
+
+	else
+		echo "Something bad happened."
+		exit
+	fi
+}
+
+intConfig()
+{
+	
+	grep -e HWADDR -e UUID /etc/sysconfig/network-scripts/ifcfg-$1 > /etc/sysconfig/network-scripts/ifcfg-$1.tmp
+
+	echo "TYPE=Ethernet
+BOOTPROTO=static
+DEFROUTE=yes
+PEERDNS=no
+PEERROUTES=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_PEERDNS=yes
+IPV6_PEERROUTES=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=$1
+ONBOOT=yes
+IPADDR=$2
+NETMASK=255.255.255.0
+BROADCAST=172.30.240.255
+NETWORK 172.30.240.0
+GATEWAY 172.30.240.1
+DNS1=$dns_server_1
+DNS2=$dns_server_2" >> /etc/sysconfig/network-scripts/ifcfg-$1.tmp
+
+}
+
+addyou
+{
+	echo "[ Add users ]"
+	echo "Enter user to add:"
+	read user
+	adduser $user adm
+}
+
+getPubKey
+{
+	wget http://lab5.gtisc.gatech.edu/$1.pub
+}
+
+
+#####################################################################
+# Gather Variables
+
+getDNS
+
+echo "Does this server have a public interface? (y/n)"
+read public_int
+
+if [ "$public_int" = "y" ]; then
+	getPublicIP
+	intConfig $pub_int $public_ip
+fi
+
+
+echo "Does this server have a private interface? (y/n)"
+read private_int
+
+if [ "$private_int" = "y" ]; then
+        getPrivateIP
+	intConfig $pri_int $private_ip
+fi
+
+getHost
+
+# Setup hostname
+hostnamectl set-hostname --static $hostname.gtisc.gatech.edu
+
+# Setup Interfaces
+
+
+############### Get RSA Public Keys ##################
+sudo mkdir tmp
+cd tmp
+echo "[====================]"
+echo " Gathering SSH Keys "
+echo "[====================]"
+echo "Add William Garrison? (y/n)"
+read add_william_key
+
+if [ "$add_william_key" = "y" ]; then
+        getPubKey william
+fi
+
+echo "Add Chris Magistrado? (y/n)"
+read add_chris_key
+
+if [ "$add_chris_key" = "y" ]; then
+	getPubKey chris
+fi
+
+echo "Add Phillip Werner? (y/n)"
+read add_phillip_key
+
+if [ "$add_phillip_key" = "y" ]; then
+	getPubKey phillip
+fi
+
+echo "Add Alex Neal? (y/n)"
+read add_alex_key
+
+if [ "$add_alex_key" = "y" ]; then
+        getPubKey alex
+fi
+
+cat * > authorized_keys
+mkdir /home/$USERNAME/.ssh
+mv authorized_keys /home/$USERNAME/.ssh/
+cd ..
+sudo rm -rf tmp
+
+
+
+
