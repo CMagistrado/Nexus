@@ -1,0 +1,3 @@
+
+# Linux System Aliases
+alias ll="ls -la"
