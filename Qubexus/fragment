@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# Name: fragment
+# Description: Moves vm from main hdd to external hdd
+#
+sudo mv /var/lib/qubes/appvms/$1 /mnt/VMs
+ln -s /mnt/VMs/$1 /var/lib/qubes/appvms/
