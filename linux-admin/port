@@ -1,4 +1,4 @@
 #!/bin/bash
 ## Name: port
 ## Description: Determines what service is on a certain port
-lsof -i :port -S
+lsof -i $1 -S
