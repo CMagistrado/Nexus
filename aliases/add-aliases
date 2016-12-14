@@ -1,0 +1,3 @@
+# This script adds all the aliases in ./aliases/ into ~/.bashrc
+
+cat aliases/* >> ~/.bashrc

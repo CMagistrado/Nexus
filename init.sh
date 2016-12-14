@@ -1,3 +1,3 @@
 #!/bin/bash
-./add-aliases
+/aliases/add-aliases
 cp update /usr/bin/update
