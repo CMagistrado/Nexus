@@ -1,4 +1,0 @@
-# This script adds alias for my git
-echo "alias ga='git add'" >> ~/.bashrc
-echo "alias gc='git commit -M'" >> ~/.bashrc
-/bin/bash
