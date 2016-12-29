@@ -1,0 +1,14 @@
+sudo apt-get install build-essential autoconf libtool pkg-config libboost-all-dev libssl-dev libevent-dev
+
+# Berkeley DB
+
+wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
+tar xzvf db-4.8.30.NC.tar.gz
+cd db-4.8.30.NC/build_unix/
+../dist/configure --enable-cxx
+make
+sudo make install
+
+sudo ln -s /usr/local/BerkeleyDB.4.8 /usr/include/db4.8
+sudo ln -s /usr/include/db4.8/include/* /usr/include
+sudo ln -s /usr/include/db4.8/lib/* /usr/lib
