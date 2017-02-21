@@ -1,0 +1,29 @@
+# 
+# This shall explain how the Snapshots are configured, per VM.
+#
+# How I Setup the snapshots:
+# I started them up, made the hardened it a little bit, then from root down to user, erased history with history -c, exit, reboot VM, then snapshot!
+#
+Saved Confirugation across all VMs.
+Gateway IP: 192.168.100.1
+
+[   Metasploitable 1 - IP: 192.168.100.101 ]
+
+	Snapshot1: 	Fresh Install. Nothing Changed.
+	Snapshot2: 	msfadmin password is now SecureMeta1!
+				root password: SecureR00t!
+
+[   Metasploitable 2 - IP: 192.168.100.102 ]
+
+	Snapshot1: 	Fresh Install. Nothing Changed.
+	Snapshot2: 	A) msfadmin password is now SuperSecureMeta2!
+				B) root password: SecureR00t22!
+				C) msfadmin is no longer in group admin (no longer a sudo user)
+
+
+[   Metasploitable 3 - IP: 192.168.100.103 ]
+
+	Snapshot1: 	Fresh Install. Nothing Changed.
+	Snapshot2: 	msfadmin password is now SecurePassw0rd!
+				root password: SecureR00t!
+

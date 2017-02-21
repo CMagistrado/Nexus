@@ -1,0 +1,7 @@
+# ---------------------------- #
+# Start OpenVPN Server
+# ---------------------------- #
+openvpn --dev tun0 --ifconfig 192.168.100.2 192.168.100.3 --ifconfig-pool 192.168.100.4 192.168.100.254 --mode server --tls-server --dh /etc/openvpn/easy-rsa/keys/dh2048.pem --ca /etc/openvpn/easy-rsa/keys/ca.crt --cert /etc/openvpn/easy-rsa/keys/server.crt --key /etc/openvpn/easy-rsa/keys/server.key --reneg-sec 60 --verb 5
+
+
+https://www.cyberciti.biz/faq/linux-port-scanning/

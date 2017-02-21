@@ -1,0 +1,28 @@
+# ---------------------------- #
+# Generate OpenVPN Server keys
+# ---------------------------- #
+
+cd /etc/openvpn
+cp -R /usr/share/easy-rsa/* easy-rsa
+cd easy-rsa
+mkdir keys
+echo 01 > keys/serial
+touch keys/index.txt
+
+. ./vars  # set environment variables
+./clean-all
+
+## Generate Server cert
+./build-ca
+
+## Generate Diffie-Hellman Params
+./build-dh
+
+
+#/etc/openvpn/easy-rsa/vars
+export KEY_COUNTRY="US"
+export KEY_PROVINCE="CA"
+export KEY_CITY="SanFrancisco"
+export KEY_ORG="Fort-Funston"
+export KEY_EMAIL="mail@domain"
+export KEY_EMAIL=mail@domain 

@@ -1,0 +1,38 @@
+Generate OpenVPN Client Keys
+
+
+cd /etc/openvpn
+mkdir easy-rsa
+
+cd easy-rsa
+mkdir keys
+echo 01 > keys/serial
+touch keys/index.txt
+
+. ./vars  # set environment variables
+./clean-all
+
+
+
+# Determines if index.txt exists, and if so, renames it and creates a blank index.txt file
+# During the time of this creation, there was a bug that would not allow one to create client keys if the server crt was created first. This solves the issue of index.txt not being empty
+if [ -e /etc/openvpn/easy-rsa/keys/index.txt ]
+  then
+    mv /etc/openvpn/easy-rsa/keys/index.txt /etc/openvpn/easy-rsa/keys/old.index.txt
+    touch /etc/openvpn/easy-rsa/keys/index.txt
+fi
+
+
+
+PEM!1
+
+scp keys/ca.key keys/client1.crt keys/client1.key user@host:/home/user/
+
+---- client-side ---
+mkdir /etc/openvpn/easy-rsa
+cd /etc/openvpn/easy-rsa
+mv /home/user/ca.key /etc/openvpn/easy-rsa
+mv /home/user/client1.key /etc/openvpn/easy-rsa
+mv /home/user/client1.crt /etc/openvpn/easy-rsa
+
+
